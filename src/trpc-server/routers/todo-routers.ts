@@ -1,6 +1,7 @@
 import { publicProcedure, router } from "../trpc";
-import { CreateRequestTodoSchema } from "../../intefaces";
-import { createToDoItem, queryAllTodos } from "../../server/services/todo-service";
+import { createToDoItem, queryAllTodos, queryTodoById, queryTodoByTodoId } from "../../server/services/todo-service";
+import { CreateRequestTodoSchema } from "../../models/schemas";
+import { z } from "zod";
 
 export const todoRouters = router({
     todoList: publicProcedure.query(async () => {
@@ -13,4 +14,16 @@ export const todoRouters = router({
             const newTodo = await createToDoItem(input);
             return newTodo;
         }),
+    getTodo: publicProcedure
+        .input(z.string())
+        .query(async ({ input }) => {
+            const todo = await queryTodoById(input);
+            return todo;
+        }),
+    // getTodo: publicProcedure
+    //     .input(z.number())
+    //     .query(async ({ input }) => {
+    //         const todo = await queryTodoByTodoId(input);
+    //         return todo;
+    //     }),
 })

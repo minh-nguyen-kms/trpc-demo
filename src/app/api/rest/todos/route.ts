@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createToDoItem, queryAllTodos } from "../../../../server/services/todo-service";
-import { CreateRequestTodo } from "../../../../intefaces";
+import { CreateRequestTodo } from "../../../../models/entities";
 
 
 export async function GET(request: Request) {

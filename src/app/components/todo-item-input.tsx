@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react';
-import { TodoItem } from '../../intefaces';
+import { TodoItem } from '../../models/entities';
 
 export interface ITodoItemInputProps {
   value?: TodoItem;
@@ -10,6 +10,7 @@ const TodoItemInputComponent = (props: ITodoItemInputProps) => {
   const { value, onChange, onSave } = props;
   const [formValue, setFormValue] = useState(value ?? {
     _id: '',
+    todoId: 0,
     title: '',
   });
 

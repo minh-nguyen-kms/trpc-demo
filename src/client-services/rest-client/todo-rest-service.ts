@@ -1,4 +1,4 @@
-import { CreateRequestTodo, TodoItem } from "../../intefaces";
+import { CreateRequestTodo, TodoItem } from "../../models/entities";
 
 const BASE_URL = `/api/rest`;
 
@@ -17,3 +17,10 @@ export const createTodo = async (payload: CreateRequestTodo) => {
     });
     return await response.json() as TodoItem;
 }
+
+export const fetchTodoById = async (id: string) => {
+    const response = await fetch(`${BASE_URL}/todos/${id}`);
+    return await response.json() as TodoItem;
+}
+
+
