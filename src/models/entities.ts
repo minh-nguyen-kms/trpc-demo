@@ -2,12 +2,32 @@ export type TodoItem = {
   _id: string;
   todoId: number;
   title: string;
+  description?: string;
 }
 export type CreateRequestTodo = {
   title: string;
   todoId: number;
 }
 export type UpdateRequestTodo = TodoItem;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

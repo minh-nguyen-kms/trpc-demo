@@ -1,11 +1,13 @@
 "use client"; // This is a client component 👈🏽
 
 import { useRouter } from 'next/navigation';
-import { createTodo, fetchAllTodos } from '../client-services/todo-service';
+import { createTodo, fetchAllTodos, subscribeTodoOnAdded } from '../client-services/todo-service';
 import { TodoItem } from '../models/entities';
 import { TodoItemInput } from './components/todo-item-input';
 import { ToDoList } from './components/todo-list'
 import { useCallback, useEffect, useState } from 'react';
+
+const IS_SUBSCRITION_ENABLED = false;
 
 export default function Home() {
   const router = useRouter();
@@ -19,6 +21,19 @@ export default function Home() {
     loadTodos();
   }, [loadTodos]);
 
+  useEffect(() => {
+    if (!IS_SUBSCRITION_ENABLED) {
+      return;
+    }
+    const unsubscribe = subscribeTodoOnAdded((newTodo) => {
+      console.log('newTodo', newTodo);
+      setTodos((prevTodos) => [...prevTodos, newTodo]);
+    });
+    return () => {
+      unsubscribe.unsubscribe();
+    }
+  }, []);
+
   const handleItemClick = useCallback((id: string) => {
     const nextRoute = `/todo/${id}`;
     console.log('nextRoute', nextRoute);
@@ -30,7 +45,9 @@ export default function Home() {
       title: newTodo.title,
       todoId: new Date().getTime(),
     });
-    await loadTodos();
+    if (!IS_SUBSCRITION_ENABLED) {
+      await loadTodos();
+    }
   }, [loadTodos]);
 
   return (

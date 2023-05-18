@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     return NextResponse.json(items);
 }
 
-export async function POST(request: Request, ) {
+export async function POST(request: Request ) {
     const payload = await request.json() as CreateRequestTodo;
     const newItem = await createToDoItem(payload);
     return NextResponse.json(newItem);

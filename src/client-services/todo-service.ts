@@ -12,6 +12,13 @@ export const fetchTodoById = async (id: string): Promise<TodoItem> => {
     return service.fetchTodoById(id);
 }
 
-export const createTodo = async (payload: CreateRequestTodo): Promise<TodoItem> => {
+export const createTodo = async (payload: {
+    title: string;
+    todoId: number;
+}): Promise<TodoItem> => {
     return service.createTodo(payload);
+}
+
+export const subscribeTodoOnAdded = (onData: (item: TodoItem) => void) => {
+    return service.subscribeTodoOnAdded(onData);
 }

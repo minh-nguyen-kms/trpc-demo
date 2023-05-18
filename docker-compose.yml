@@ -1,0 +1,59 @@
+version: '3.6'
+# Deploys MongoDB with customization scripts and container with Mongo client
+# https://fabianlee.org/2018/05/20/docker-using-docker-compose-to-link-a-mongodb-server-and-client/
+#
+# usage:
+# sudo docker-compose build
+# sudo docker-compose up
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=ft-assets
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      # seeding scripts
+      - ./.data/mongo-entrypoint:/docker-entrypoint-initdb.d
+      # named volumes
+      - ./.data/mongodb:/data/db
+      - ./.data/mongoconfig:/data/configdb
+    networks:
+      - localnet
+
+  # redis:
+  #   image: bitnami/redis
+  #   container_name: redis
+  #   ports:
+  #     - 6379:6379
+  #   environment:
+  #     - REDIS_MASTER_PORT_NUMBER=6379
+  #     - ALLOW_EMPTY_PASSWORD=yes
+  #   volumes:
+  #     - ./data/redis:/data
+
+  # redis-commander:
+  #   image: ghcr.io/joeferner/redis-commander:latest
+  #   container_name: redis-commander
+  #   hostname: redis-commander
+  #   restart: always
+  #   environment:
+  #     - REDIS_HOSTS=local:redis:6379
+  #   ports:
+  #     - "3102:8081"
+  #   depends_on:
+  #     - redis
+    
+volumes:
+  # default dir on Ubuntu: /var/lib/docker/volumes
+  mongodb:
+  mongoconfig:
+
+networks:
+  localnet:
+    name: localnet
+    driver: bridge
