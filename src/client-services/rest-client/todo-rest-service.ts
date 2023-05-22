@@ -1,4 +1,3 @@
-import { Unsubscribable } from "@trpc/server/observable";
 import { CreateRequestTodo, TodoItem } from "../../models/entities";
 
 const BASE_URL = `/api/rest`;
@@ -25,4 +24,11 @@ export const createTodo = async (payload: {
 export const fetchTodoById = async (id: string) => {
     const response = await fetch(`${BASE_URL}/todos/${id}`);
     return await response.json() as TodoItem;
+}
+
+export const deleteTodo = async (id: string) => {
+    const response = await fetch(`${BASE_URL}/todos/${id}`, {
+        method: 'DELETE'
+    });
+    return await response.json() as { deletedId: string };
 }

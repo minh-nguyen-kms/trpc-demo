@@ -52,3 +52,8 @@ export const createToDoItem = async (payload: CreateRequestTodo): Promise<TodoIt
         title: payload.title
     };
 }
+
+export const deleteTodoById = async (id: string): Promise<void> => {
+    const todoCollection = await openCollection();
+    await todoCollection.deleteOne({ _id: new ObjectId(id) });
+}

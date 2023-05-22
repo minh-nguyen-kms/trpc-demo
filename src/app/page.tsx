@@ -1,13 +1,13 @@
 "use client"; // This is a client component 👈🏽
 
 import { useRouter } from 'next/navigation';
-import { createTodo, fetchAllTodos, subscribeTodoOnAdded } from '../client-services/todo-service';
+import { createTodo, deleteTodo, fetchAllTodos } from '../client-services/todo-service';
 import { TodoItem } from '../models/entities';
 import { TodoItemInput } from './components/todo-item-input';
 import { ToDoList } from './components/todo-list'
 import { useCallback, useEffect, useState } from 'react';
-
-const IS_SUBSCRITION_ENABLED = false;
+import { Container, Stack } from '@mui/material';
+// import { subscribeTodoOnChanged } from '../client-services/trpc-client/todo-trpc-service';
 
 export default function Home() {
   const router = useRouter();
@@ -21,22 +21,26 @@ export default function Home() {
     loadTodos();
   }, [loadTodos]);
 
-  useEffect(() => {
-    if (!IS_SUBSCRITION_ENABLED) {
-      return;
-    }
-    const unsubscribe = subscribeTodoOnAdded((newTodo) => {
-      console.log('newTodo', newTodo);
-      setTodos((prevTodos) => [...prevTodos, newTodo]);
-    });
-    return () => {
-      unsubscribe.unsubscribe();
-    }
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = subscribeTodoOnChanged((changedItem) => {
+  //     const deletedItem = changedItem as { deletedId: string };
+  //     if (deletedItem.deletedId) {
+  //       console.log('[tRPC Subscription] Todo deleted:', deletedItem.deletedId);
+  //       setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== deletedItem.deletedId));
+  //       return;
+  //     } else {
+  //       const newTodo = changedItem as TodoItem;
+  //       console.log('[tRPC Subscription] New Todo added:', newTodo);
+  //       setTodos((prevTodos) => [...prevTodos, newTodo]);
+  //     }
+  //   });
+  //   return () => {
+  //     unsubscribe.unsubscribe();
+  //   }
+  // }, []);
 
   const handleItemClick = useCallback((id: string) => {
     const nextRoute = `/todo/${id}`;
-    console.log('nextRoute', nextRoute);
     router.push(nextRoute);
   }, [router]);
 
@@ -45,15 +49,20 @@ export default function Home() {
       title: newTodo.title,
       todoId: new Date().getTime(),
     });
-    if (!IS_SUBSCRITION_ENABLED) {
-      await loadTodos();
-    }
+    await loadTodos();
+  }, [loadTodos]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    await deleteTodo(id);
+    await loadTodos();
   }, [loadTodos]);
 
   return (
-    <main>
-      <ToDoList value={todos} onItemClick={handleItemClick} />
-      <TodoItemInput onSave={handleSave} />
-    </main>
+      <Container>
+        <Stack spacing={2} direction="column">
+          <TodoItemInput onSave={handleSave} />
+          <ToDoList value={todos} onItemClick={handleItemClick} onItemDelete={handleDelete} />
+        </Stack>
+      </Container>
   )
 }
