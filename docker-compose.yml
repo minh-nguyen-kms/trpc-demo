@@ -13,7 +13,7 @@ services:
     ports:
       - 27017:27017
     environment:
-      - MONGO_INITDB_DATABASE=ft-assets
+      - MONGO_INITDB_DATABASE=todos
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
@@ -24,29 +24,6 @@ services:
       - ./.data/mongoconfig:/data/configdb
     networks:
       - localnet
-
-  # redis:
-  #   image: bitnami/redis
-  #   container_name: redis
-  #   ports:
-  #     - 6379:6379
-  #   environment:
-  #     - REDIS_MASTER_PORT_NUMBER=6379
-  #     - ALLOW_EMPTY_PASSWORD=yes
-  #   volumes:
-  #     - ./data/redis:/data
-
-  # redis-commander:
-  #   image: ghcr.io/joeferner/redis-commander:latest
-  #   container_name: redis-commander
-  #   hostname: redis-commander
-  #   restart: always
-  #   environment:
-  #     - REDIS_HOSTS=local:redis:6379
-  #   ports:
-  #     - "3102:8081"
-  #   depends_on:
-  #     - redis
     
 volumes:
   # default dir on Ubuntu: /var/lib/docker/volumes
